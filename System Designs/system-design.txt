@@ -1,0 +1,73 @@
+system design concepts
+1. Horizontal Scaling
+	a. load balancer
+	b. auto scaling groups
+2. Vertical Scalling
+3. Logging service
+4. Metrics service, we will get metrics from logs, and cloud resources
+5. alerts service, we will set up alters based on the metrics
+
+Design Requirements of System Design 
+
+In a interview, we have to analyse and weigh the trade off and figure out, which option is the best,
+its really about the thought process.
+
+Designs Requirements
+
+1. Move Data move videos, comments,
+2. Store Data store videos efficiently
+3. Transform Data encoding the videos, aggregating the no. of views, metrics.
+
+
+These three operations encapsulates all of the functionalities of most of the applications
+
+It pretty much boils down to these three things
+
+
+Design of Large applications, need to done in careful way beacuse bad design choices are 
+very difficult to refractor later.
+
+ design of database is important
+
+ we should know the general architecture of the application.
+
+
+ What is a good design?
+
+ Think in terms of trade offs.
+
+ How do we measure the trade offs
+
+ Availability
+
+What is a good design?
+
+we have to think about trade offs?
+
+1. Availability, uptime of the server
+	it is commmonly used to define the SLO.
+	Service Level Objective
+
+	SLA - for Database Service Level Agreement.
+2. Reliability
+	is the probabilty than our system wont fail.
+	single server has higher probability of the system or server to fail
+	so adding a another server increases the reliability of the system or server.
+3. Fault Tolerence
+	if we have higher redundancy or redundant servers, we have increased our fault tolerance.
+	which will increase our fault tolerance.
+4. Redundancy. we have a second additional server in a different part for the geographic area,
+ 	which will take over in the event of failure.
+5. throughput is measured in request per second, how many requests our system or server
+ 	could handle, maybe a single server could handle 100 req/s
+ 	we can increase throughput by scaling, vertical or horizontal scaling.
+6.	
+
+
+azure ai studio 
+windows copilot
+copilot
+microsoft fabric  
+
+
+

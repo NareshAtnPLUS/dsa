@@ -1,0 +1,25 @@
+{
+    "editor.fontFamily": "'Roboto Mono',Consolas, 'Courier New', monospace",
+    "editor.fontSize": 15,
+    "terminal.integrated.fontFamily": "'Consolas',monospace",
+    "terminal.integrated.fontSize": 18,
+    "terminal.integrated.defaultProfile.windows": "Command Prompt",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.cursorWidth": 3,
+    "editor.lineHeight": 1.75,
+    "editor.tabSize": 4,
+    "debug.console.fontSize": 18,
+    "editor.cursorBlinking": "phase",
+    "editor.cursorWidth": 3,
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "entity.name.function",
+                "settings": {
+                    "fontStyle": "italic bold"
+                }
+            }
+        ]
+    }
+}

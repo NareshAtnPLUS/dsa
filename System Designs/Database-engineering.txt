@@ -1,0 +1,12 @@
+Atomoicity
+The idea of transaction being one unit of work, that cannot be seperated.
+In a transaction, all the queries must be successful as a unit of work, if one query failed the 
+transaction should be failed, this property is called atomicity.
+
+An atomic transaction is a transaction that will rollback all the queries if one or more queries failed.
+
+
+Isolation
+Read phenonemas are undesirable.
+Isolation Levels are introduced to solve read phenomena
+-Dirty Reads read something that some other transcation wrote but didnt commit

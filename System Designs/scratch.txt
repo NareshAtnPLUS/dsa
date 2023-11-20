@@ -1,0 +1,227 @@
+const WebSocket = require('ws');
+const { Pool } = require('pg');
+const { BlobServiceClient } = require('@azure/storage-blob');
+
+const wss = new WebSocket.Server({ server });
+const clients = new Map();
+
+// PostgreSQL database configuration
+const pool = new Pool({
+  user: 'your-username',
+  password: 'your-password',
+  host: 'your-host',
+  port: 5432,
+  database: 'your-database',
+});
+
+// Azure Blob Storage configuration
+const blobServiceClient = BlobServiceClient.fromConnectionString('your-connection-string');
+const containerName = 'files';
+
+// Store connected users and their rooms
+const users = new Map();
+
+// Serve static files from the "public" directory
+app.use(express.static('public'));
+
+// Handle WebSocket connections
+wss.on('connection', (ws) => {
+  console.log('New client connected:', ws);
+
+  // Handle incoming messages
+  ws.on('message', (message) => {
+    const data = JSON.parse(message);
+    const { event, data: eventData } = data;
+
+    switch (event) {
+      case 'joinRoom':
+        handleJoinRoom(ws, eventData.room);
+        break;
+      case 'chatMessage':
+        handleChatMessage(ws, eventData.message);
+        break;
+      case 'privateMessage':
+        handlePrivateMessage(ws, eventData.recipient, eventData.message);
+        break;
+      case 'fileShare':
+        handleFileShare(ws, eventData.recipient, eventData.fileName, eventData.data);
+        break;
+      case 'typing':
+        handleTyping(ws, eventData.isTyping);
+        break;
+      default:
+        console.log('Unknown event:', event);
+    }
+  });
+
+  // Handle WebSocket close event
+  ws.on('close', () => {
+    console.log('Client disconnected:', ws);
+
+    // Remove the user from the room
+    const room = clients.get(ws);
+    if (room) {
+      clients.delete(ws);
+      users.delete(ws);
+      broadcastToRoom(room, JSON.stringify({ event: 'userLeft', data: ws }));
+    }
+  });
+
+  // Handle WebSocket error event
+  ws.on('error', (error) => {
+    console.error('WebSocket error:', error);
+  });
+});
+
+// Handle join room event
+function handleJoinRoom(ws, room) {
+  // Leave the current room
+  const prevRoom = clients.get(ws);
+  if (prevRoom) {
+    ws.leave(prevRoom);
+    broadcastToRoom(prevRoom, JSON.stringify({ event: 'userLeft', data: ws }));
+  }
+
+  // Join the new room
+  ws.join(room);
+  clients.set(ws, room);
+
+  // Notify room participants about the new user
+  broadcastToRoom(room, JSON.stringify({ event: 'userJoined', data: ws }));
+
+  // Send the list of current room participants to the joining user
+  const participants = Array.from(getClientsInRoom(room));
+  ws.send(JSON.stringify({ event: 'roomParticipants', data: participants }));
+
+  // Retrieve and send message history to the joining user
+  retrieveMessageHistory(room)
+    .then((history) => {
+      ws.send(JSON.stringify({ event: 'messageHistory', data: history }));
+    })
+    .catch((error) => {
+      console.error('Error retrieving message history:', error);
+    });
+}
+
+// Handle chat messages
+function handleChatMessage(ws, message) {
+  const room = clients.get(ws);
+  if (room) {
+    addToMessageHistory(room, ws, message)
+      .then(() => {
+        broadcastToRoom(room, JSON.stringify({ event: 'chatMessage', data: { user: ws, message } }));
+      })
+      .catch((error) => {
+        console.error('Error adding message to history:', error);
+      });
+  }
+}
+
+// Handle direct messages
+function handlePrivateMessage(ws, recipient, message) {
+  const sender = ws;
+  const senderRoom = clients.get(sender);
+  const recipientRoom = clients.get(recipient);
+
+  if (senderRoom && recipientRoom) {
+    Promise.all([
+      addToMessageHistory(senderRoom, sender, message),
+      addToMessageHistory(recipientRoom, sender, message),
+    ])
+      .then(() => {
+        broadcastToClients([sender, recipient], JSON.stringify({ event: 'privateMessage', data: { sender, recipient, message } }));
+      })
+      .catch((error) => {
+        console.error('Error adding private message to history:', error);
+      });
+  }
+}
+
+// Handle file sharing
+async function handleFileShare(ws, recipient, fileName, data) {
+  const sender = ws;
+  const senderRoom = clients.get(sender);
+  const recipientRoom = clients.get(recipient);
+
+  if (senderRoom && recipientRoom) {
+    try {
+      // Save the file to Azure Blob Storage
+      const containerClient = blobServiceClient.getContainerClient(containerName);
+      const blockBlobClient = containerClient.getBlockBlobClient(fileName);
+      await blockBlobClient.upload(data, data.length);
+
+      // Add the file sharing event to the sender's and recipient's message history
+      Promise.all([
+        addToMessageHistory(senderRoom, sender, `[File] ${fileName}`),
+        addToMessageHistory(recipientRoom, sender, `[File] ${fileName}`),
+      ])
+        .then(() => {
+          broadcastToClients([sender, recipient], JSON.stringify({ event: 'fileShare', data: { sender, recipient, fileName } }));
+        })
+        .catch((error) => {
+          console.error('Error adding file sharing event to history:', error);
+        });
+    } catch (error) {
+      console.error('Error uploading file to Azure Blob Storage:', error);
+    }
+  }
+}
+
+// Handle typing indicator
+function handleTyping(ws, isTyping) {
+  const room = clients.get(ws);
+  if (room) {
+    broadcastToRoom(room, JSON.stringify({ event: 'typing', data: { user: ws, isTyping } }));
+  }
+}
+
+// Retrieve message history from the database
+async function retrieveMessageHistory(room) {
+  try {
+    const query = 'SELECT * FROM message_history WHERE room = $1 ORDER BY timestamp ASC';
+    const { rows } = await pool.query(query, [room]);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Add a chat message to the message history in the database
+async function addToMessageHistory(room, user, message) {
+  try {
+    const query = 'INSERT INTO message_history (room, user, message) VALUES ($1, $2, $3)';
+    await pool.query(query, [room, user, message]);
+  } catch (error) {
+    throw error;
+  }
+}
+
+// Broadcast a message to all clients in a room
+function broadcastToRoom(room, message) {
+  const clientsInRoom = getClientsInRoom(room);
+  broadcastToClients(clientsInRoom, message);
+}
+
+// Get all clients in a room
+function getClientsInRoom(room) {
+  const clientsInRoom = [];
+  for (const [client, clientRoom] of clients) {
+    if (clientRoom === room) {
+      clientsInRoom.push(client);
+    }
+  }
+  return clientsInRoom;
+}
+
+// Broadcast a message to a list of clients
+function broadcastToClients(clients, message) {
+  for (const client of clients) {
+    client.send(message);
+  }
+}
+
+// Start the server
+const port = process.env.PORT || 3000;
+server.listen(port, () => {
+  console.log(`Server running on port ${port}`);
+});

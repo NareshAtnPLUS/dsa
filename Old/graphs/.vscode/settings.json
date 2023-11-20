@@ -1,0 +1,19 @@
+{
+    "editor.fontFamily": "'Roboto Mono',Consolas, 'Courier New', monospace",
+    "editor.fontSize": 24,
+    "terminal.integrated.fontFamily": "Fira Code",
+    "terminal.integrated.fontSize": 20,
+    "editor.lineHeight": 1.75,
+    "editor.tabSize": 4,
+    "debug.console.fontSize": 30,
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "entity.name.function",
+                "settings": {
+                    "fontStyle": "italic bold"
+                }
+            }
+        ]
+    }
+}

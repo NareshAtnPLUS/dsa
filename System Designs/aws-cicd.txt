@@ -1,0 +1,6 @@
+aws token codebuild
+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
+
+
+pipeline arn for auth 
+arn:aws:codestar-connections:us-east-1:689403002380:connection/d19cde45-3cd1-4d0a-9122-326657f128c9

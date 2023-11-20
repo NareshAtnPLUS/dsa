@@ -1,0 +1,43 @@
+highest priority and equal weightages
+physical appearance, fitness
+less inertia, more active lifestyle
+
+willingness to learn and evolve,
+vision of creating a beautiful home.
+
+creating an environment which empowers every one 
+help build a great story of travel, aliveness, love and a remarkable friendship which helps to push each other
+ important qualities
+ 1. loyality
+ 2. honest and transparent.
+ 3. seeing the problem from a 3rd eye perspective
+ 4. embrasing no blame culture
+ 5. actively taking responsibilty.
+
+
+Clean code 
+solid design principles course
+software dev mindsets for sucessful career
+how to become a senior dev beyound coding skills
+
+
+sql queries
+deploy a new function
+ajay stop 
+work with jetha to hubsopt connector and try to see if we can use data factory
+
+every 4 hours 
+insert to dbo users backup table
+email all customers
+
+codepipline role name im creating
+AWSCodePipelineServiceRole-us-east-1-conversesphere-api-v2-pipe
+
+
+connection arn for codepipeline
+arn:aws:codestar-connections:us-east-1:689403002380:connection/d19cde45-3cd1-4d0a-9122-326657f128c9
+
+codebuild service role
+
+
+

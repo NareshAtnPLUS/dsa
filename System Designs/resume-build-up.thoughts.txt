@@ -1,0 +1,31 @@
+Target industry -> Block chain,fin tech, web3 startups
+
+
+
+skills i need to work on
+
+Data structures and Algorithms
+AWS Serverless, API Gateway,
+Solidity, Block chain, how to integrate and use block chain code into web3 backends
+
+
+
+Data structures i need to revise this weekend
+1. tree
+2. linked list
+3. stack
+
+Week 2.
+Graph
+binary search
+sliding window
+
+
+weekend 3
+
+two pointers
+array and hashing
+tree
+do paper work
+and write psuedo code
+convert psuedo code into source code.
