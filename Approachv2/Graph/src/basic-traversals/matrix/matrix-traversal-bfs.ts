@@ -3,7 +3,7 @@ import {
   directions,
   getSize,
   rangeIn,
-} from './utils';
+} from '../utils';
 
 export const bfsTraversal = (grid: number[][]) => {
   const gridSize = getSize(grid);

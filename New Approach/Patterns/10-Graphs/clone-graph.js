@@ -14,7 +14,7 @@ const cloneGraph = (node) => {
     const dfs = (node) => {
         // memoization
         if (oldToNewHashMap.has(node)) {
-            return oldToNewHashMap.set(node);
+            return oldToNewHashMap.get(node);
         }
         const copy = new GraphNode(node);
         oldToNewHashMap.set(node, copy);

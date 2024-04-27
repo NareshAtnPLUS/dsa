@@ -1,5 +1,5 @@
-import {MatrixNodeType} from './types';
-import {createNode, directions, getSize, rangeIn} from './utils';
+import {MatrixNodeType} from '../types';
+import {createNode, directions, getSize, rangeIn} from '../utils';
 
 /**
  * The matrix traversal can be done in three steps
