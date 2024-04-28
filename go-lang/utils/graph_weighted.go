@@ -1,5 +1,8 @@
 package utils
 
+/*
+utils for weighted graph
+*/
 type Edge struct {
 	Src    string
 	Dst    string
