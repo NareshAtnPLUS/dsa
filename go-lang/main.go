@@ -2,7 +2,6 @@ package main
 
 import (
 	"data-structures/dsa-practice/graphs"
-	"data-structures/dsa-practice/utils"
 	fmt "fmt"
 	time "time"
 )
@@ -65,13 +64,13 @@ func main() {
 	// fmt.Printf("\n Num ways to reach E: %d", numWays)
 	// fmt.Printf("\n Shortest Distance to reach E from A: %d", shortestDistance)
 
-	// heights := [][]int{
-	// 	{1, 2, 2, 3, 5},
-	// 	{3, 2, 3, 4, 4},
-	// 	{2, 4, 5, 3, 1},
-	// 	{6, 7, 1, 4, 5},
-	// 	{5, 1, 1, 2, 4},
-	// }
+	heights := [][]int{
+		{1, 2, 2, 3, 5},
+		{3, 2, 3, 4, 4},
+		{2, 4, 5, 3, 1},
+		{6, 7, 1, 4, 5},
+		{5, 1, 1, 2, 4},
+	}
 	// board := [][]string{
 	// 	{"X", "X", "X", "X"},
 	// 	{"X", "O", "O", "X"},
@@ -86,10 +85,10 @@ func main() {
 	// maxAreaIsland := graphs.MaxAreaIsland(matrix)
 	// fmt.Printf("\n max area of the islands in the grid %v is\n: %d", matrix, maxAreaIsland)
 
-	// pacificAndAtlantic := graphs.PacificAtlantic(heights)
+	pacificAndAtlantic := graphs.PacificAtlantic(heights)
 	// surroundedRegions := graphs.CaptureSurroundedRegions(board)
 	// fmt.Println("Surrounded Regions:", surroundedRegions)
-	// fmt.Printf("\n The nodes from which water can reach pacific and atlantic ocean are: \n %v", pacificAndAtlantic)
+	fmt.Printf("\n The nodes from which water can reach pacific and atlantic ocean are: \n %v", pacificAndAtlantic)
 
 	// matrix := [][]int{
 	// 	{2, 1, 1},
@@ -146,21 +145,21 @@ func main() {
 	// shortestTime := graphs.FindCheapestPrice(4, data, 0, 3, 1)
 	// fmt.Printf("\nThe shortest cost to reach 3 from 0 is %d", shortestTime)
 
-	edges := []utils.EdgeInt{
-		{1, 2, 10},
-		{1, 3, 8},
-		{2, 3, 4},
-		{2, 4, 4},
-		{3, 4, 4},
-		{3, 5, 4},
-		{4, 5, 2},
-	}
-	nodeCount := 5
-	// mst := graphs.CreateMinimumSpanningTree(edges, nodeCount, 1)
-	mst := graphs.KruskalsAlgorithmWithMinHeap(edges, nodeCount)
-	for _, edge := range mst {
-		fmt.Printf("%d - %d\n", edge.Src, edge.Dst)
-	}
+	// edges := []utils.EdgeInt{
+	// 	{1, 2, 10},
+	// 	{1, 3, 8},
+	// 	{2, 3, 4},
+	// 	{2, 4, 4},
+	// 	{3, 4, 4},
+	// 	{3, 5, 4},
+	// 	{4, 5, 2},
+	// }
+	// nodeCount := 5
+	// // mst := graphs.CreateMinimumSpanningTree(edges, nodeCount, 1)
+	// mst := graphs.KruskalsAlgorithmWithMinHeap(edges, nodeCount)
+	// for _, edge := range mst {
+	// 	fmt.Printf("%d - %d\n", edge.Src, edge.Dst)
+	// }
 	duration := time.Since(start)
 	fmt.Printf("\nExecution time: %v", duration)
 	fmt.Println("Naresh Kumar")
