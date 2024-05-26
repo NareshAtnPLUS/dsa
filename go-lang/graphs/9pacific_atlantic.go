@@ -1,6 +1,9 @@
 package graphs
 
-import "data-structures/dsa-practice/utils"
+import (
+	"data-structures/dsa-practice/utils"
+	"fmt"
+)
 
 func PacificAtlantic(heights [][]int) []utils.MatrixNode {
 	gridSize := &utils.GridSize{
@@ -54,8 +57,19 @@ func PacificAtlanticV2(heights [][]int) []utils.MatrixNode {
 		dfsTransOceanV2(pacificToAtlanticCoordinates, pacificOriginHeight, &pacificToAtlanticMap, gridSize, &heights)
 		dfsTransOceanV2(atlanticToPacificCoordinates, atlanticOriginHeight, &atlanticToPacificMap, gridSize, &heights)
 	}
+	fmt.Println("pacificToAtlanticMap")
+	printMap(pacificToAtlanticMap, heights)
+	fmt.Println("atlanticToPacificMap")
+	printMap(atlanticToPacificMap, heights)
 	result := utils.IntersectMap(pacificToAtlanticMap, atlanticToPacificMap)
 	return result
+}
+func printMap(flowMap map[utils.MatrixNode]bool, heights [][]int) {
+	for node, _ := range flowMap {
+		r, c := node[0], node[1]
+		fmt.Printf("[[R:%d, C:%d] | %d] ", r, c, heights[r][c])
+	}
+	// fmt.Println()
 }
 func dfsTransOcean(r, c, prevHeight int, visited *map[utils.MatrixNode]bool, gridSize *utils.GridSize, heights *[][]int) {
 	node := utils.MatrixNode{r, c}
@@ -79,15 +93,14 @@ func dfsTransOcean(r, c, prevHeight int, visited *map[utils.MatrixNode]bool, gri
 func dfsTransOceanV2(coordinates utils.Coordinates, prevHeight int, visited *map[utils.MatrixNode]bool, gridSize *utils.GridSize, heights *[][]int) {
 	r, c := coordinates.R, coordinates.C
 	node := utils.MatrixNode{r, c}
-	currHeight := (*heights)[r][c]
 
 	if utils.Min(r, c) < 0 ||
 		r >= gridSize.Rows || c >= gridSize.Cols ||
 		(*visited)[node] ||
-		prevHeight > currHeight {
+		prevHeight > (*heights)[r][c] {
 		return
 	}
-
+	currHeight := (*heights)[r][c]
 	(*visited)[node] = true
 	for _, dir := range utils.Directions {
 		dr, dc := dir[0], dir[1]

@@ -51,3 +51,45 @@ func dfsCourseScheduler(course *int, prerequisitesMap *map[int][]int, visited *m
 
 	return true
 }
+
+const CAN_FINISH = true
+const CANNOT_FINISH = false
+
+func CourseSchedulerV2(numCourses int, prerequisites [][]int) bool {
+	crsPrereqMap := make(map[int][]int)
+
+	for _, prerequisite := range prerequisites {
+		crs, prereq := prerequisite[0], prerequisite[1]
+		crsPrereqMap[crs] = append(crsPrereqMap[crs], prereq)
+	}
+	visited := make(map[int]bool)
+
+	for crs := range crsPrereqMap {
+		if !topologicalSortCourses(&crs, &crsPrereqMap, &visited) {
+			return CANNOT_FINISH
+		}
+	}
+	return CAN_FINISH
+}
+func topologicalSortCourses(course *int, crsPrereqMap *map[int][]int, visited *map[int]bool) bool {
+
+	if (*visited)[*course] {
+		return CANNOT_FINISH
+	}
+
+	if len((*crsPrereqMap)[*course]) == 0 {
+		return CAN_FINISH
+	}
+
+	(*visited)[*course] = true
+	prerequisites := (*crsPrereqMap)[*course]
+	for _, prerequisite := range prerequisites {
+		if !topologicalSortCourses(&prerequisite, crsPrereqMap, visited) {
+			return CANNOT_FINISH
+		}
+	}
+	delete(*visited, *course)
+
+	(*crsPrereqMap)[*course] = []int{}
+	return CAN_FINISH
+}

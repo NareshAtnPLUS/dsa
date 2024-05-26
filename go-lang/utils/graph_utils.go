@@ -4,6 +4,7 @@ type Coordinates struct {
 	R int
 	C int
 }
+type VisitedMap[K comparable] map[K]bool
 type GridSize struct {
 	Rows int
 	Cols int
@@ -132,4 +133,19 @@ func IntersectMap(map1, map2 map[MatrixNode]bool) []MatrixNode {
 	}
 
 	return intersection
+}
+func IsOutOfBounds(pos Coordinates, gridSize *GridSize) bool {
+
+	if Min(pos.R, pos.C) < 0 ||
+		pos.R >= gridSize.Rows || pos.C >= gridSize.Cols {
+		return true
+	}
+
+	return false
+}
+func Abs(n int) int {
+	if n < 0 {
+		return -n
+	}
+	return n
 }

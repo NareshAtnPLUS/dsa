@@ -3,10 +3,10 @@ package graphs
 import "data-structures/dsa-practice/utils"
 
 /*
-	In order to reach the endWord from the beginWord the endWord has to be there in the wordList
+In order to reach the endWord from the beginWord the endWord has to be there in the wordList
 */
 func LadderLength(beginWord, endWord string, wordList []string) int {
-	if !includes(wordList, endWord) {
+	if !includesLegacy(wordList, endWord) {
 		return 0
 	}
 
@@ -15,8 +15,8 @@ func LadderLength(beginWord, endWord string, wordList []string) int {
 
 	for _, word := range wordList {
 		// for every word in the word list we want to find every possible pattern for this word.
-		// here j is the pointer just to go through every single position of the word
-		// we know that all the words are of same length
+		// here idx is the pointer just to go through every single position of the word
+		// we know that or assuming all the words are of same length
 		for idx := range word {
 			// for each position of the word, replace the char with wildcard so that we will get the
 			// pattern. we are transforming this word string into the pattern string.
@@ -56,7 +56,11 @@ func LadderLength(beginWord, endWord string, wordList []string) int {
 	return 0
 }
 
-func includes(wordList []string, word string) bool {
+func includes(wordMap map[Word]bool, word Word) bool {
+	return wordMap[word]
+}
+
+func includesLegacy(wordList []string, word string) bool {
 	for _, _word := range wordList {
 		if _word == word {
 			return true

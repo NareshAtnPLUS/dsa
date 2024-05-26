@@ -49,7 +49,7 @@ func CreateMinimumSpanningTree(edges []utils.EdgeInt, n, src int) []utils.EdgeIn
 		visited[edge.Dst] = true
 
 		for _, nextEdge := range adj[edge.Dst] {
-			if !visited[edge.Dst] {
+			if !visited[nextEdge.Dst] {
 				heap.Push(edgeMinHeap, nextEdge)
 			}
 		}

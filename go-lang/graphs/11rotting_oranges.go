@@ -64,3 +64,63 @@ func RottingOranges(grid [][]int) int {
 	}
 	return timeTaken
 }
+func RottingOrangesV2(grid [][]int) int {
+	freshOranges := 0
+	queue := utils.Queue{}
+
+	for r, row := range grid {
+		for c := range row {
+			if grid[r][c] == FRESH_ORANGE {
+				freshOranges += 1
+			}
+			if grid[r][c] == ROTTEN_ORANGE {
+				zerothInfectionNode := &utils.MatrixNode{r, c}
+				queue.Enqueue(zerothInfectionNode)
+			}
+		}
+	}
+	fullInfectedTime := computeFullInfectionTime(&queue, &freshOranges, &grid)
+
+	if freshOranges > 0 {
+		return -1
+	}
+	return fullInfectedTime
+
+}
+
+func computeFullInfectionTime(queue *utils.Queue, freshOranges *int, grid *[][]int) int {
+	fullInfectionTime := 0
+	gridSize := &utils.GridSize{
+		Rows: len(*grid),
+		Cols: len((*grid)[0]),
+	}
+
+	for len(*queue) > 0 && *freshOranges > 0 {
+		queueLen := len(*queue)
+		for idx := 0; idx < queueLen; idx++ {
+			primaryInfectionNode, _ := queue.Dequeue()
+			r, c := primaryInfectionNode[0], primaryInfectionNode[1]
+
+			for _, dir := range utils.Directions {
+				dr, dc := dir[0], dir[1]
+				nextNode := utils.Coordinates{R: r + dr, C: c + dc}
+
+				// infect only fresh oranges. so check and ignoring invalid nodes
+				if utils.IsOutOfBounds(nextNode, gridSize) ||
+					(*grid)[nextNode.R][nextNode.C] == ROTTEN_ORANGE ||
+					(*grid)[nextNode.R][nextNode.C] == EMPTY_CELL {
+					continue
+				}
+
+				(*grid)[nextNode.R][nextNode.C] = ROTTEN_ORANGE
+				(*freshOranges)--
+				queue.Enqueue(&utils.MatrixNode{nextNode.R, nextNode.C})
+
+			}
+
+		}
+		fullInfectionTime++
+	}
+	return fullInfectionTime
+
+}

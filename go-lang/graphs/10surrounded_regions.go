@@ -5,6 +5,10 @@ import (
 	"fmt"
 )
 
+const O = "O"
+const X = "X"
+const TEMP = "T"
+
 func CaptureSurroundedRegions(board [][]string) [][]string {
 	gridSize := &utils.GridSize{
 		Rows: len(board),
@@ -61,5 +65,55 @@ func dfsCapture(r, c int, gridSize *utils.GridSize, board *[][]string) {
 	for _, dir := range utils.Directions {
 		dr, dc := dir[0], dir[1]
 		dfsCapture(r+dr, c+dc, gridSize, board)
+	}
+}
+
+func dfsCaptureV2(pos utils.Coordinates, gridSize *utils.GridSize, board *[][]string) {
+	if utils.IsOutOfBounds(pos, gridSize) || (*board)[pos.R][pos.C] != O {
+		return
+	}
+	(*board)[pos.R][pos.C] = TEMP
+	for _, dir := range utils.Directions {
+		dr, dc := dir[0], dir[1]
+		nextPos := utils.Coordinates{R: pos.R + dr, C: pos.C + dc}
+		dfsCaptureV2(nextPos, gridSize, board)
+	}
+}
+func CaptureSurroundedRegionsV2(board [][]string) [][]string {
+	gridSize := &utils.GridSize{
+		Rows: len(board),
+		Cols: len(board[0]),
+	}
+	// converting perimeter 0s to temporary character
+	for r, row := range board {
+		for c := range row {
+			pos := &utils.Coordinates{R: r, C: c}
+			if board[r][c] == O && isPerimeterCell(pos, gridSize) {
+				dfsCaptureV2(*pos, gridSize, &board)
+			}
+		}
+	}
+
+	// capturing 4 bounded 0s to X
+	updateBoard(O, X, &board)
+
+	// reverting Ts to 0s
+	updateBoard(TEMP, O, &board)
+
+	return board
+}
+func isPerimeterCell(pos *utils.Coordinates, gridSize *utils.GridSize) bool {
+	if (pos.R == 0 || pos.R == gridSize.Rows-1) || (pos.C == 0 || pos.C == gridSize.Cols-1) {
+		return true
+	}
+	return false
+}
+func updateBoard(old, new string, board *[][]string) {
+	for r, row := range *board {
+		for c := range row {
+			if (*board)[r][c] == old {
+				(*board)[r][c] = new
+			}
+		}
 	}
 }
